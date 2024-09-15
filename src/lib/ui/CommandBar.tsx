@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { readCheckedStateFromParam } from "@/lib/utils";
 
 export default function CommandBar() {
     const searchParams = useSearchParams();
@@ -11,14 +12,8 @@ export default function CommandBar() {
     
     const [selectValue, setSelectValue] = useState(searchParams.get("order") ?? "chronological");
 
-    function readCheckedStateFromParam(key: string, if_null_return: boolean = true) {
-        const val = searchParams.get(key);
-        if (typeof val === "string") return val === "true";
-        return if_null_return;
-    }
-
-    const [showCompleted, setShowCompleted] = useState(readCheckedStateFromParam("showCompleted"));
-    const [showTodo, setShowTodo] = useState(readCheckedStateFromParam("showTodo"));
+    const [showCompleted, setShowCompleted] = useState(readCheckedStateFromParam(searchParams, "showCompleted"));
+    const [showTodo, setShowTodo] = useState(readCheckedStateFromParam(searchParams, "showTodo"));
 
     function handleOrderChange(value: string) {
         const params = new URLSearchParams(searchParams)
