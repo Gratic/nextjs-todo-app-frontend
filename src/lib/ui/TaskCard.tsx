@@ -20,7 +20,6 @@ export default function TaskCard({ task, index, last } : { task: Task, index: nu
 
     return  (
         <div
-            key={task.id}
             className={`border-b border-gray-200 p-5 flex justify-between items-center hover:bg-white hover:bg-opacity-60 transition-all duration-300 
                 ${ index === 0 ? 'rounded-t-2xl' : ''}
                 ${ last ? 'border-b-0 rounded-b-2xl' : '' } `}
@@ -36,7 +35,7 @@ export default function TaskCard({ task, index, last } : { task: Task, index: nu
                 </p>
             </div>
             <button className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300">
-                <span className="font-semibold">Details</span>
+                <span className="font-semibold text-xl"><BiDetail /></span>
             </button>
         </div>
     );
