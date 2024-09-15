@@ -1,11 +1,21 @@
 'use client';
-import { Task } from "./datatypes";
+import { useState } from "react";
+import { Task } from "../datatypes";
 import { BiDetail } from "react-icons/bi";
 
 
 export default function TaskCard({ task, index, last } : { task: Task, index: number, last: boolean }) {
-    function onCheckboxClick(id: string) {
-        console.log("Clicked on " + id);
+    const [completed, SetCompleted] = useState(Boolean(task.completedAt));
+
+    function onCheckboxClick() {
+        SetCompleted(!completed);
+        
+        if(!completed)
+        {
+            task.completedAt = new Date(Date.now()).toISOString();
+        } else {
+            task.completedAt = null;
+        }
     }
 
     return  (
@@ -18,6 +28,7 @@ export default function TaskCard({ task, index, last } : { task: Task, index: nu
             <div className="flex items-center space-x-4">
                 <input type="checkbox"
                     checked={ task.completedAt ? true : false }
+                    onChange={() => onCheckboxClick()}
                     className="form-checkbox h-6 w-6 text-indigo-600 rounded transition duration-150 ease-in-out" 
                 />
                 <p className={`font-medium text-lg ${ task.completedAt ? 'text-gray-500 line-through' :  'text-gray-800' } `}>
