@@ -2,20 +2,25 @@
 import { useState } from "react";
 import { Task } from "../datatypes";
 import { BiDetail } from "react-icons/bi";
+import { updateTask } from "../actions";
 
 
 export default function TaskCard({ task, index, last } : { task: Task, index: number, last: boolean }) {
-    const [completed, SetCompleted] = useState(Boolean(task.completedAt));
+    const [completed, setCompleted] = useState(Boolean(task.completedAt));
+    const [stateTask, setTask] = useState(task);
 
     function onCheckboxClick() {
-        SetCompleted(!completed);
+        setCompleted(!completed);
         
         if(!completed)
         {
             task.completedAt = new Date(Date.now()).toISOString();
         } else {
-            task.completedAt = null;
+            task.completedAt = "";
         }
+
+        updateTask(task.id, task);
+        setTask(task);
     }
 
     return  (
@@ -26,12 +31,12 @@ export default function TaskCard({ task, index, last } : { task: Task, index: nu
         >
             <div className="flex items-center space-x-4">
                 <input type="checkbox"
-                    checked={ task.completedAt ? true : false }
+                    checked={ stateTask.completedAt ? true : false }
                     onChange={() => onCheckboxClick()}
                     className="form-checkbox h-6 w-6 text-indigo-600 rounded transition duration-150 ease-in-out" 
                 />
-                <p className={`font-medium text-lg ${ task.completedAt ? 'text-gray-500 line-through' :  'text-gray-800' } `}>
-                    {task.title}
+                <p className={`font-medium text-lg ${ stateTask.completedAt ? 'text-gray-500 line-through' :  'text-gray-800' } `}>
+                    {stateTask.title}
                 </p>
             </div>
             <button className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300">
