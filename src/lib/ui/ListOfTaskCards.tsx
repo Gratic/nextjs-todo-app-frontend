@@ -3,13 +3,17 @@
 import TaskCard from "@/lib/ui/TaskCard";
 import { useSearchParams } from "next/navigation";
 import { readCheckedStateFromParam } from "@/lib/utils";
+import { getAllTasks } from "../task_rest_api";
+
 
 export default function ListOfTaskCards() {
-    const tasks = [
-        { id: "id1", title: "title of 1", content: "content of 1", completedAt: null},
-        { id: "id2", title: "title of 2", content: "content of 2", completedAt: null},
-        { id: "id3", title: "title of 3", content: "content of 3", completedAt: '2024-09-15'},
-    ]
+    const { tasks, isLoading, isError } = getAllTasks();
+
+    // const tasks = [
+    //     { id: "id1", title: "title of 1", content: "content of 1", completedAt: null},
+    //     { id: "id2", title: "title of 2", content: "content of 2", completedAt: null},
+    //     { id: "id3", title: "title of 3", content: "content of 3", completedAt: '2024-09-15'},
+    // ]
 
     const params = useSearchParams();
 
@@ -17,8 +21,10 @@ export default function ListOfTaskCards() {
     const showTodo = readCheckedStateFromParam(params, "showTodo", true);
     const orderBy = params.get("order") ?? "chronologically";
 
-    const showedTasks = tasks
-        .filter(task => (showCompleted && showTodo) || (showCompleted && task.completedAt) || (showTodo && !task.completedAt));
+    if (isLoading) return <p>Loading...</p>;
+    if (isError) return <p>An error occured.</p>;
+
+    const showedTasks = tasks?.filter(task => (showCompleted && showTodo) || (showCompleted && task.completedAt) || (showTodo && !task.completedAt)) ?? [];
     
     if (orderBy === "reverse")
         showedTasks.reverse();
