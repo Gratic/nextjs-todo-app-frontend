@@ -7,8 +7,8 @@ import { BiPlus } from "react-icons/bi";
 export default function Home() {
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-8 font-sans">
-            <main className="max-w-3xl mx-auto">
+        <main className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-8 font-sans">
+            <div className="max-w-3xl mx-auto">
 
                 {/* Header */}
                 <div className="text-center mb-12 transform hover:scale-105 transition-transform duration-300">
@@ -33,7 +33,7 @@ export default function Home() {
                     </span>
                 </button>
                 
-            </main>
-        </div>
+            </div>
+        </main>
       );
 }
