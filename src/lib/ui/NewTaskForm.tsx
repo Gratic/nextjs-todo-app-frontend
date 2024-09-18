@@ -27,21 +27,21 @@ export default function NewTaskForm({ onSubmit, onCancel } : { onSubmit: (task: 
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Task title"
-                className="w-full p-2 mb-2 border rounded"
+                className="w-full p-2 mb-2 border rounded text-black"
                 required
             />
             <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Task description (optional)"
-                className="w-full p-2 mb-2 border rounded"
+                className="w-full p-2 mb-2 border rounded text-black"
                 rows={3}
             />
             <div className="flex justify-end space-x-2">
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+                    className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded "
                 >
                     Cancel
                 </button>
