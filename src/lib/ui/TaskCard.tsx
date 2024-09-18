@@ -4,7 +4,6 @@ import { Task } from "../datatypes";
 import { BiDetail } from "react-icons/bi";
 import { updateTask } from "../actions";
 
-
 export default function TaskCard({ task, index, last } : { task: Task, index: number, last: boolean }) {
     const [completed, setCompleted] = useState(Boolean(task.completedAt));
     const [stateTask, setTask] = useState(task);
