@@ -10,7 +10,7 @@ export default function CommandBar() {
     const pathname = usePathname();
     const { replace } = useRouter();
     
-    const [selectValue, setSelectValue] = useState(searchParams.get("order") ?? "chronological");
+    const [selectValue, setSelectValue] = useState(searchParams.get("order") ?? "reverse");
 
     const [showCompleted, setShowCompleted] = useState(readCheckedStateFromParam(searchParams, "showCompleted"));
     const [showTodo, setShowTodo] = useState(readCheckedStateFromParam(searchParams, "showTodo"));
@@ -58,8 +58,8 @@ export default function CommandBar() {
                     onChange={e => handleOrderChange(e.currentTarget.value)}
                     value={selectValue}
                 >
-                    <option value="chronologically">Chronologically</option>
-                    <option value="reverse">Reverse</option>
+                    <option value="chronologically">Older first</option>
+                    <option value="reverse">Recent first</option>
                 </select>
             </div>
 
