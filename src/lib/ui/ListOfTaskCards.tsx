@@ -8,6 +8,7 @@ import { createTask, updateTask, deleteTask } from "../actions";
 import { useCallback, useMemo, useState } from "react";
 import NewTaskForm from "./NewTaskForm";
 import { Task } from "../datatypes";
+import { Conditional } from "./Conditional";
 
 
 export default function ListOfTaskCards() {
@@ -69,9 +70,10 @@ export default function ListOfTaskCards() {
 
     return (
         <div className="bg-white bg-opacity-40 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
-            { isAdding ? (
+            <Conditional condition={isAdding}>
                 <NewTaskForm onSubmit={createNewTask} onCancel={() => setIsAdding(false)} />
-            ) : (
+            </Conditional>
+            <Conditional condition={!isAdding}>
                 <button 
                     onClick={() => setIsAdding(true)}
                     className="w-full p-4 text-indigo-600 hover:bg-indigo-50 transition-colors duration-300 flex items-center justify-center"
@@ -81,13 +83,13 @@ export default function ListOfTaskCards() {
                     </svg>
                     <span className="ml-2">Add Task</span>
                 </button>
-            )}
+            </Conditional>
             {showedTasks.map((task, index, arr) => 
                 <TaskCard 
                     key={task.id} 
                     task={task} 
-                    index={index} 
-                    last={arr.length-1 === index} 
+                    first={index === 0} 
+                    last={index === arr.length-1} 
                     onUpdate={handleTaskUpdate}
                     onDelete={handleTaskDeletion}
                     />
