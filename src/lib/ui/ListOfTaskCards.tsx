@@ -4,42 +4,47 @@ import TaskCard from "@/lib/ui/TaskCard";
 import { useSearchParams } from "next/navigation";
 import { readCheckedStateFromParam } from "@/lib/utils";
 import { getAllTasks } from "../task_rest_api";
-import { createTask } from "../actions";
-import { useState } from "react";
+import { createTask, updateTask } from "../actions";
+import { useCallback, useMemo, useState } from "react";
 import NewTaskForm from "./NewTaskForm";
 import { Task } from "../datatypes";
 
 
 export default function ListOfTaskCards() {
-    // const tasks = [
-    //     { id: "id1", title: "title of 1", content: "content of 1", completedAt: null},
-    //     { id: "id2", title: "title of 2", content: "content of 2", completedAt: null},
-    //     { id: "id3", title: "title of 3", content: "content of 3", completedAt: '2024-09-15'},
-    // ]
-
     const params = useSearchParams();
     const { tasks, isLoading, isError, mutate } = getAllTasks();
+
     const showCompleted = readCheckedStateFromParam(params, "showCompleted", true);
     const showTodo = readCheckedStateFromParam(params, "showTodo", true);
     const orderBy = params.get("order") ?? "chronologically";
 
     const [isAdding, setIsAdding] = useState(false);
+    const [, setUpdateTrigger] = useState(0);
 
-    if (isLoading) return <p>Loading...</p>;
-    if (isError) return <p>An error occured.</p>;
+    const showedTasks = useMemo(() => {
+        if (!tasks) return [];
+        let filteredTasks = tasks.filter(task =>
+            (showCompleted && showTodo) || 
+            (showCompleted && task.completedAt) || 
+            (showTodo && !task.completedAt)
+        );
+        return orderBy === "reverse" ? filteredTasks.reverse() : filteredTasks
+    }, [tasks, showCompleted, showTodo, orderBy]);
 
-    const showedTasks = tasks?.filter(task => (showCompleted && showTodo) || (showCompleted && task.completedAt) || (showTodo && !task.completedAt)) ?? [];
-    
-    if (orderBy === "reverse")
-        showedTasks.reverse();
+    const handleTaskUpdate = useCallback(async (id: string, updatedTask: Partial<Task>) => {
+        await updateTask(id, updatedTask);
+        mutate();
+        setUpdateTrigger(prev => prev + 1); // Trigger re-render
+    }, [mutate])
 
     async function createNewTask(newTask: Omit<Task, "id">) {
         const createdTask = await createTask(newTask);
-        tasks?.push(createdTask) ?? [createdTask];
-        mutate(tasks);
-
+        mutate([...(tasks ?? []), createdTask]);
         setIsAdding(false);
     }
+
+    if (isLoading) return <p>Loading...</p>;
+    if (isError) return <p>An error occured.</p>;
 
     return (
         <div className="bg-white bg-opacity-40 backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl">
@@ -57,7 +62,13 @@ export default function ListOfTaskCards() {
                 </button>
             )}
             {showedTasks.map((task, index, arr) => 
-                <TaskCard key={task.id} task={task} index={index} last={arr.length-1 === index} />
+                <TaskCard 
+                    key={task.id} 
+                    task={task} 
+                    index={index} 
+                    last={arr.length-1 === index} 
+                    onUpdate={handleTaskUpdate}
+                    />
             )}
         </div>
     );
