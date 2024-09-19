@@ -2,10 +2,10 @@
 
 import { ChangeEvent, useState } from "react";
 import { Task } from "../datatypes";
-import { BiCheck, BiDetail, BiMinus, BiPencil, BiTrash, BiX } from "react-icons/bi";
+import { BiCheck, BiChevronDown, BiChevronUp, BiPencil, BiTrash, BiX } from "react-icons/bi";
 import { Conditional } from "@/lib/ui/Conditional";
 
-export default function TaskCard({ task, index, last, onUpdate, onDelete } : { task: Task, index: number, last: boolean, onUpdate: (id:string, newTasks:Partial<Task>) => Promise<void>, onDelete: (id:string) => Promise<void> }) {
+export default function TaskCard({ task, first, last, onUpdate, onDelete } : { task: Task, first: boolean, last: boolean, onUpdate: (id:string, newTasks:Partial<Task>) => Promise<void>, onDelete: (id:string) => Promise<void> }) {
     const [isOpen, setOpen] = useState(false);
     const [isEdit, setEdit] = useState(false);
     const [editTask, setEditTask] = useState({ title: task.title, content: task.content} as Partial<Task>)
@@ -50,7 +50,7 @@ export default function TaskCard({ task, index, last, onUpdate, onDelete } : { t
     return  (
         <div
             className={`border-b border-gray-200 p-5 hover:bg-white hover:bg-opacity-60 transition-all duration-300 
-                ${ index === 0 ? 'rounded-t-2xl' : ''}
+                ${ first ? 'rounded-t-2xl' : ''}
                 ${ last ? 'border-b-0 rounded-b-2xl' : '' } `}
         >
             <div className="flex justify-between items-center">
@@ -86,7 +86,7 @@ export default function TaskCard({ task, index, last, onUpdate, onDelete } : { t
                                 className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300"
                                 onClick={() => onOpenClick()}
                             >
-                                <span className="font-semibold text-xl">{ isOpen ? <BiMinus /> : <BiDetail />}</span>
+                                <span className="font-semibold text-xl">{ isOpen ? <BiChevronUp  /> : <BiChevronDown  />}</span>
                             </button>
                         </Conditional>
                         <button
