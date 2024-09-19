@@ -26,8 +26,17 @@ export async function updateTask(id:string, newTask: Partial<Task>) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(newTask),
-        })
-        .then(res => res.json()) as Task;
+        }
+    ).then(res => res.json()) as Task;
 
     return task;
+}
+
+export async function deleteTask(id:string) {
+    await fetch(
+        `http://localhost:8000/v1/tasks/${id}`,
+        {
+            method: "DELETE",
+        }
+    )
 }
