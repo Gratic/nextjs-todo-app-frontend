@@ -21,18 +21,6 @@ export default function Home() {
 
                 {/* List of tasks */}
                 <ListOfTaskCards />
-
-                {/* Add task button */}
-                <button className="mt-8 bg-gradient-to-r py-3 px-6 from-indigo-500 to-pink-600 text-white font-bold 
-                rounded-full shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 
-                focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 
-                flex items-center justify-center w-full sm:w-auto">
-                    <BiPlus className="text-xl"/>
-                    <span className="mr-2 text-xl">
-                        Add Task
-                    </span>
-                </button>
-                
             </div>
         </main>
       );
