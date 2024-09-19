@@ -16,7 +16,7 @@ export default function ListOfTaskCards() {
 
     const showCompleted = readCheckedStateFromParam(params, "showCompleted", true);
     const showTodo = readCheckedStateFromParam(params, "showTodo", true);
-    const orderBy = params.get("order") ?? "chronologically";
+    const orderBy = params.get("order") ?? "reverse";
 
     const [isAdding, setIsAdding] = useState(false);
     const [, setUpdateTrigger] = useState(0);
@@ -28,7 +28,22 @@ export default function ListOfTaskCards() {
             (showCompleted && task.completedAt) || 
             (showTodo && !task.completedAt)
         );
-        return orderBy === "reverse" ? filteredTasks.reverse() : filteredTasks
+
+        orderBy === "reverse" ? filteredTasks.reverse() : filteredTasks
+
+        filteredTasks.sort((a, b) => {
+            if (a.completedAt !== undefined && b.completedAt === undefined) return 1;
+            if (a.completedAt === undefined && b.completedAt !== undefined) return -1;
+            if (a.completedAt !== undefined && b.completedAt !== undefined) {
+                const ad = new Date(a.completedAt);
+                const bd = new Date(b.completedAt);
+
+                return bd.getTime() - ad.getTime();
+            }
+            return 0;
+        });
+
+        return filteredTasks;
     }, [tasks, showCompleted, showTodo, orderBy]);
 
     const handleTaskUpdate = useCallback(async (id: string, updatedTask: Partial<Task>) => {
