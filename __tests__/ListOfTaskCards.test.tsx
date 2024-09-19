@@ -1,8 +1,9 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, findByRole, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Task } from '@/lib/datatypes';
 import ListOfTaskCards from '@/lib/ui/ListOfTaskCards';
 import { act } from 'react';
+import { deleteTask, updateTask } from '@/lib/actions';
 
 let tasks: Array<Task> = [];
 let mockSearchParams: jest.Mock;
@@ -33,7 +34,8 @@ jest.mock('@/lib/task_rest_api', () => ({
 }));
 
 jest.mock("@/lib/actions", () => ({
-    updateTask: jest.fn()
+    updateTask: jest.fn(),
+    deleteTask: jest.fn(),
 }))
 
 function createMockSearchParams({showCompleted, showTodo, order} : {showCompleted: boolean, showTodo: boolean, order: "chronologically" | "reverse"}) {
@@ -112,12 +114,105 @@ describe("List of Task Cards tests", () => {
         });
 
         it("Should display only completed tasks when show todo is turned off", async () => {
-            render(<ListOfTaskCards />)
+            render(<ListOfTaskCards />);
 
             const notCompletedTask = screen.queryByText("title of 1");
             expect(notCompletedTask).not.toBeInTheDocument();
 
             await screen.findByText("title of 2");
         });
+    });
+
+    it("Should update list when a task is updated", async () => {
+        mockSearchParams = createMockSearchParams({
+            showCompleted: true,
+            showTodo: true,
+            order: "chronologically",
+        })
+
+        const { rerender } = render(<ListOfTaskCards />);
+
+        const title = await screen.findByText("title of 1");
+
+        const taskElement = title.parentElement!.parentElement!.parentElement!;
+
+        const editBtn = await findByRole(taskElement, 'button', { name: /edit/i });
+        act(() => {
+            fireEvent.click(editBtn);
+        });
+
+        const editTitle = await findByRole(taskElement, 'textbox', { name: /edit title/i });
+        act(() => {
+            fireEvent.change(editTitle, { target: { value: "new edited title" }});
+        });
+
+        const editContent = await findByRole(taskElement, 'textbox', { name: /edit content/i });
+        act(() => {
+            fireEvent.change(editContent, { target: { value: "new edited content" }});
+        });
+
+        const validBtn = await findByRole(taskElement, 'button', { name: /valid edit/i });
+        act(() => {
+            fireEvent.click(validBtn);
+        });
+
+        expect(updateTask).toHaveBeenCalled();
+        expect(updateTask).toHaveBeenCalledWith("id of 1", { title: "new edited title", content: "new edited content"})
+
+        tasks[0].title = "new edited title"
+        tasks[0].content = "new edited content"
+
+        act(() => {
+            rerender(<ListOfTaskCards />) // <- Rerender should be triggered by mutate, but we're mocking it rn...
+        })
+
+        const oldTitle = screen.queryByText("title of 1");
+        expect(oldTitle).not.toBeInTheDocument();
+
+        const newTitle = await screen.findByText("new edited title");
+        const newTaskElement = newTitle.parentElement!.parentElement!.parentElement!;
+
+        const showBtn = await findByRole(newTaskElement, 'button', { name: /show description/i });
+        act(() => {
+            fireEvent.click(showBtn);
+        });
+
+        await screen.findByText("new edited content");
+    });
+
+    it("Should update list when a task is deleted", async () => {
+        mockSearchParams = createMockSearchParams({
+            showCompleted: true,
+            showTodo: true,
+            order: "chronologically",
+        })
+
+        const { rerender } = render(<ListOfTaskCards />);
+
+        const title = await screen.findByText("title of 1");
+
+        const taskElement = title.parentElement!.parentElement!.parentElement!;
+
+        const deleteBtn = await findByRole(taskElement, 'button', { name: /delete/i });
+        act(() => {
+            fireEvent.click(deleteBtn);
+        });
+
+        const validBtn = await findByRole(taskElement, 'button', { name: /valid delete/i });
+        act(() => {
+            fireEvent.click(validBtn);
+        });
+
+        expect(deleteTask).toHaveBeenCalled();
+        expect(deleteTask).toHaveBeenCalledWith("id of 1")
+
+        tasks.shift();
+        
+        act(() => {
+            rerender(<ListOfTaskCards />) // <- Rerender should be triggered by mutate, but we're mocking it rn...
+        });
+
+        const oldTitle = screen.queryByText("title of 1");
+        expect(oldTitle).not.toBeInTheDocument();
     });
 });
