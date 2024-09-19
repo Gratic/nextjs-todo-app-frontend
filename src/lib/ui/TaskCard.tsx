@@ -47,7 +47,8 @@ export default function TaskCard({ task, index, last, onUpdate } : { task: Task,
                 </div>
                 {
                     task.content ?
-                <button 
+                <button
+                    aria-label="show description"
                     className="text-indigo-500 hover:text-indigo-700 transition-colors duration-300"
                     onClick={() => onOpenClick()}
                 >

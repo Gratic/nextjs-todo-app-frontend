@@ -76,14 +76,14 @@ describe("TaskCard", () => {
         let task = tasks[1];
         render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate}/>);
 
-        await screen.findByRole("button")
+        await screen.findByRole("button", {name: "show description"})
     });
 
     it("Should not display a button when there's no task content", () => {
         let task = tasks[2];
         render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate}/>);
 
-        const btn = screen.queryByRole("button");
+        const btn = screen.queryByRole("button", {name: "show description"});
         expect(btn).not.toBeInTheDocument();
     });
 
@@ -91,7 +91,7 @@ describe("TaskCard", () => {
         let task = tasks[0];
         render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate} />)
 
-        const btn = await screen.findByRole("button");
+        const btn = await screen.findByRole("button", {name: "show description"});
         fireEvent.click(btn);
 
         await waitFor(async () => {
