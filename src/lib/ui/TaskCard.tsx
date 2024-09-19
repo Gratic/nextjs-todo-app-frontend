@@ -75,6 +75,9 @@ export default function TaskCard({ task, index, last, onUpdate, onDelete } : { t
                         />
                     </Conditional>
                 </div>
+                <Conditional condition={Boolean(task.completedAt)}>
+                    <p className="font-medium text-gray-500">{ new Date(task.completedAt!).toLocaleString() }</p>
+                </Conditional>
                 <Conditional condition={showButtons}>
                     <div>
                         <Conditional condition={Boolean(task.content)}>

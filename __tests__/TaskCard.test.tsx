@@ -20,7 +20,7 @@ describe("TaskCard", () => {
                 id: "2",
                 title: "title of 2",
                 content: "content of 2",
-                completedAt: "date of 2",
+                completedAt: "2024-09-19T18:44:36.047Z",
             },
             {
                 id: "3",
@@ -85,6 +85,13 @@ describe("TaskCard", () => {
             await waitFor(async () => {
                 await screen.findByText("content of 1");
             })
+        });
+
+        it("Should display the completedAt date when there's one", async () => {
+            let task = tasks[1];
+            render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate} onDelete={onDelete} />);
+
+            await screen.findByText(new Date(task.completedAt!).toLocaleString())
         });
     });
 
