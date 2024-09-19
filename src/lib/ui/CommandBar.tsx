@@ -10,7 +10,7 @@ export default function CommandBar() {
     const pathname = usePathname();
     const { replace } = useRouter();
     
-    const [selectValue, setSelectValue] = useState(searchParams.get("order") ?? "chronological");
+    const [selectValue, setSelectValue] = useState(searchParams.get("order") ?? "reverse");
 
     const [showCompleted, setShowCompleted] = useState(readCheckedStateFromParam(searchParams, "showCompleted"));
     const [showTodo, setShowTodo] = useState(readCheckedStateFromParam(searchParams, "showTodo"));
@@ -54,12 +54,12 @@ export default function CommandBar() {
                 <select 
                     name="order" 
                     id="order" 
-                    className="form-select bg-white bg-opacity-50 border border-gray-300 text-gray-700 py-2 px-4 rounded-lg focus-ring-indigo-500 transition-all duration-300"
+                    className="form-select bg-white bg-opacity-50 border border-gray-300 text-gray-700 py-2 pl-4 pr-8 rounded-lg focus-ring-indigo-500 transition-all duration-300"
                     onChange={e => handleOrderChange(e.currentTarget.value)}
                     value={selectValue}
                 >
-                    <option value="chronologically">Chronologically</option>
-                    <option value="reverse">Reverse</option>
+                    <option value="chronologically">Older first</option>
+                    <option value="reverse">Recent first</option>
                 </select>
             </div>
 
