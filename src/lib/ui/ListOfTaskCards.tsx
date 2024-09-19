@@ -4,7 +4,7 @@ import TaskCard from "@/lib/ui/TaskCard";
 import { useSearchParams } from "next/navigation";
 import { readCheckedStateFromParam } from "@/lib/utils";
 import { useFetchAllTasks } from "../task_rest_api";
-import { createTask, updateTask } from "../actions";
+import { createTask, updateTask, deleteTask } from "../actions";
 import { useCallback, useMemo, useState } from "react";
 import NewTaskForm from "./NewTaskForm";
 import { Task } from "../datatypes";
@@ -43,6 +43,12 @@ export default function ListOfTaskCards() {
         setIsAdding(false);
     }
 
+    const handleTaskDeletion = useCallback(async (id:string) => {
+        await deleteTask(id);
+        mutate();
+        setUpdateTrigger(prev => prev + 1);
+    }, [mutate]);
+
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>An error occured.</p>;
 
@@ -68,6 +74,7 @@ export default function ListOfTaskCards() {
                     index={index} 
                     last={arr.length-1 === index} 
                     onUpdate={handleTaskUpdate}
+                    onDelete={handleTaskDeletion}
                     />
             )}
         </div>
