@@ -3,7 +3,7 @@
 import TaskCard from "@/lib/ui/TaskCard";
 import { useSearchParams } from "next/navigation";
 import { readCheckedStateFromParam } from "@/lib/utils";
-import { getAllTasks } from "../task_rest_api";
+import { useFetchAllTasks } from "../task_rest_api";
 import { createTask, updateTask } from "../actions";
 import { useCallback, useMemo, useState } from "react";
 import NewTaskForm from "./NewTaskForm";
@@ -12,7 +12,7 @@ import { Task } from "../datatypes";
 
 export default function ListOfTaskCards() {
     const params = useSearchParams();
-    const { tasks, isLoading, isError, mutate } = getAllTasks();
+    const { tasks, isLoading, isError, mutate } = useFetchAllTasks();
 
     const showCompleted = readCheckedStateFromParam(params, "showCompleted", true);
     const showTodo = readCheckedStateFromParam(params, "showTodo", true);
@@ -23,7 +23,7 @@ export default function ListOfTaskCards() {
 
     const showedTasks = useMemo(() => {
         if (!tasks) return [];
-        let filteredTasks = tasks.filter(task =>
+        const filteredTasks = tasks.filter(task =>
             (showCompleted && showTodo) || 
             (showCompleted && task.completedAt) || 
             (showTodo && !task.completedAt)

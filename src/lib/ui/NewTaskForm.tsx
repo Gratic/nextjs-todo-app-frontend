@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import { Task } from "../datatypes";
 
 export default function NewTaskForm({ onSubmit, onCancel } : { onSubmit: (task: Omit<Task, "id">) => void, onCancel: () => void }) {

@@ -22,7 +22,7 @@ jest.mock('next/navigation', () => {
 }});
 
 jest.mock('@/lib/task_rest_api', () => ({
-    getAllTasks: jest.fn().mockImplementation(() => {
+    useFetchAllTasks: jest.fn().mockImplementation(() => {
         return {
             tasks: [...tasks], // /!\ Has to be a new instanciation to properly trigger rerendering (surely due to useMemo)
             isLoading: false,
