@@ -1,12 +1,9 @@
-import { createEvent, fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskCard from '@/lib/ui/TaskCard';
 import { Task } from '@/lib/datatypes';
-import { updateTask } from '@/lib/actions';
 
-jest.mock("@/lib/actions", () => ({
-    updateTask: jest.fn().mockReturnValue(1)
-}))
+let onUpdate = jest.fn();
 
 describe("TaskCard", () => {
 
@@ -33,7 +30,7 @@ describe("TaskCard", () => {
     })
 
     it("Should display the title of the task", async () => {
-        render(<TaskCard task={tasks[0]} index={0} last={false} />);
+        render(<TaskCard task={tasks[0]} index={0} last={false} onUpdate={onUpdate} />);
 
         const title = await screen.findByText("title of 1");
 
@@ -41,7 +38,7 @@ describe("TaskCard", () => {
     });
 
     it("Should display the title of the task striked when task is completed", async () => {
-        render(<TaskCard task={tasks[1]} index={0} last={false} />);
+        render(<TaskCard task={tasks[1]} index={0} last={false} onUpdate={onUpdate} />);
 
         const title = await screen.findByText("title of 2");
 
@@ -50,8 +47,7 @@ describe("TaskCard", () => {
     });
 
     it("Should display a checkbox", async () => {
-        let task = tasks[0];
-        render(<TaskCard task={task} index={0} last={false}/>);
+        render(<TaskCard task={tasks[0]} index={0} last={false} onUpdate={onUpdate} />);
 
         const completedCheckbox = await screen.findByRole('checkbox', { checked: false });
 
@@ -60,14 +56,14 @@ describe("TaskCard", () => {
 
     it("Should add the completedAt property when a task is completed", async () => {
         let task = tasks[0]
-        render(<TaskCard task={task} index={0} last={false}/>);
+        render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate} />);
 
         expect(task.completedAt).toBeUndefined();
 
         const completedCheckbox = await screen.findByRole('checkbox', { checked: false });
         fireEvent.click(completedCheckbox);
 
-        expect(updateTask).toHaveBeenCalled();
+        expect(onUpdate).toHaveBeenCalled();
         expect(task.completedAt).toBeDefined();
     });
 });
