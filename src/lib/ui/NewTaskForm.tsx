@@ -24,6 +24,7 @@ export default function NewTaskForm({ onSubmit, onCancel } : { onSubmit: (task: 
         <form onSubmit={handleSubmit} className="p-4 border-b border-gray-200">
             <input
                 type="text"
+                aria-label="adding title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Task title"
@@ -31,6 +32,7 @@ export default function NewTaskForm({ onSubmit, onCancel } : { onSubmit: (task: 
                 required
             />
             <textarea
+                aria-label="adding content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Task description (optional)"
@@ -40,6 +42,7 @@ export default function NewTaskForm({ onSubmit, onCancel } : { onSubmit: (task: 
             <div className="flex justify-end space-x-2">
                 <button
                     type="button"
+                    aria-label="cancel adding"
                     onClick={onCancel}
                     className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded "
                 >
@@ -47,6 +50,7 @@ export default function NewTaskForm({ onSubmit, onCancel } : { onSubmit: (task: 
                 </button>
                 <button
                     type="submit"
+                    aria-label="valid adding"
                     className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
                 >
                     Add Task

@@ -1,8 +1,7 @@
-import { fireEvent, render, screen, findByRole, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, findByRole, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Task } from '@/lib/datatypes';
 import ListOfTaskCards from '@/lib/ui/ListOfTaskCards';
-import { act } from 'react';
 import { deleteTask, updateTask } from '@/lib/actions';
 
 let tasks: Array<Task> = [];
@@ -207,7 +206,7 @@ describe("List of Task Cards tests", () => {
         expect(deleteTask).toHaveBeenCalledWith("id of 1")
 
         tasks.shift();
-        
+
         act(() => {
             rerender(<ListOfTaskCards />) // <- Rerender should be triggered by mutate, but we're mocking it rn...
         });
