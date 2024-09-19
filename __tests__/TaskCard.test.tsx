@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TaskCard from '@/lib/ui/TaskCard';
 import { Task } from '@/lib/datatypes';
@@ -22,6 +22,11 @@ describe("TaskCard", () => {
                 content: "content of 2",
                 completedAt: "date of 2",
             },
+            {
+                id: "3",
+                title: "title of 3",
+                content: ""
+            }
         ]
     });
 
@@ -65,5 +70,32 @@ describe("TaskCard", () => {
 
         expect(onUpdate).toHaveBeenCalled();
         expect(task.completedAt).toBeDefined();
+    });
+
+    it("Should display a button when there's a task content", async () => {
+        let task = tasks[1];
+        render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate}/>);
+
+        await screen.findByRole("button")
+    });
+
+    it("Should not display a button when there's no task content", () => {
+        let task = tasks[2];
+        render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate}/>);
+
+        const btn = screen.queryByRole("button");
+        expect(btn).not.toBeInTheDocument();
+    });
+
+    it("Should display the content when the button is clicked given content", async () => {
+        let task = tasks[0];
+        render(<TaskCard task={task} index={0} last={false} onUpdate={onUpdate} />)
+
+        const btn = await screen.findByRole("button");
+        fireEvent.click(btn);
+
+        await waitFor(async () => {
+            await screen.findByText("content of 1");
+        })
     });
 });
