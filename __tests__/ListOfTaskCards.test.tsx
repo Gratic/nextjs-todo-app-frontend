@@ -2,7 +2,7 @@ import { fireEvent, render, screen, findByRole, act } from '@testing-library/rea
 import '@testing-library/jest-dom';
 import { Task } from '@/lib/datatypes';
 import ListOfTaskCards from '@/lib/ui/ListOfTaskCards';
-import { deleteTask, updateTask } from '@/lib/actions';
+import { deleteTask, updateTask } from '@/lib/task_actions';
 
 let tasks: Array<Task> = [];
 let mockSearchParams: jest.Mock;
@@ -21,7 +21,7 @@ jest.mock('next/navigation', () => {
       useSearchParams: () => mockSearchParams(),
 }});
 
-jest.mock('@/lib/task_rest_api', () => ({
+jest.mock('@/lib/task_actions', () => ({
     useFetchAllTasks: jest.fn().mockImplementation(() => {
         return {
             tasks: [...tasks], // /!\ Has to be a new instanciation to properly trigger rerendering (surely due to useMemo)
@@ -30,12 +30,9 @@ jest.mock('@/lib/task_rest_api', () => ({
             mutate: jest.fn(),
         }
     }),
-}));
-
-jest.mock("@/lib/actions", () => ({
     updateTask: jest.fn(),
     deleteTask: jest.fn(),
-}))
+}));
 
 function createMockSearchParams({showCompleted, showTodo, order} : {showCompleted: boolean, showTodo: boolean, order: "chronologically" | "reverse"}) {
     return jest.fn().mockReturnValue({
