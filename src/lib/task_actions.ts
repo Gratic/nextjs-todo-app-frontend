@@ -1,24 +1,13 @@
 "use server";
 
-import useSWR, { Fetcher } from 'swr'
 import { Task } from "./datatypes";
+import { join } from 'path';
 
-const fetcherAllTasks: Fetcher<Task[], string> = () => fetch("http://localhost:8000/v1/tasks").then(res => res.json())
-
-export function useFetchAllTasks () {
-    const { data, error, isLoading, mutate } = useSWR(`/`, fetcherAllTasks)
-   
-    return {
-      tasks: data,
-      isLoading,
-      isError: error,
-      mutate
-    }
-}
+const TASK_API_ENDPOINT = process.env.TASK_API_ENDPOINT ?? "http://localhost:8000/v1/tasks"
 
 export async function createTask(newTask: Omit<Task, "id">) {
     const task = await fetch(
-        "http://localhost:8000/v1/tasks", 
+        TASK_API_ENDPOINT, 
         {
             method: "POST",
             headers: {
@@ -33,7 +22,7 @@ export async function createTask(newTask: Omit<Task, "id">) {
 
 export async function updateTask(id:string, newTask: Partial<Task>) {
     const task = await fetch(
-        `http://localhost:8000/v1/tasks/${id}`, 
+        join(TASK_API_ENDPOINT, id), 
         {
             method: "PUT",
             headers: {
@@ -48,7 +37,7 @@ export async function updateTask(id:string, newTask: Partial<Task>) {
 
 export async function deleteTask(id:string) {
     await fetch(
-        `http://localhost:8000/v1/tasks/${id}`,
+        join(TASK_API_ENDPOINT, id),
         {
             method: "DELETE",
         }
