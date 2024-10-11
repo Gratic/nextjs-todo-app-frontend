@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import CommandBar from "@/lib/ui/CommandBar";
 import ListOfTaskCards from "@/lib/ui/ListOfTaskCards";
+import { Suspense } from 'react';
  
 export const metadata: Metadata = {
   title: 'Simple Todo App',
@@ -14,15 +15,19 @@ export default function Home() {
             <div className="max-w-3xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12 transform hover:scale-105 transition-transform duration-300">
-                    <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-600 mb-3">Simple Task App</h1>
+                    <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-pink-600 mb-3">Simple Todo App</h1>
                     <p className="text-xl text-gray-600"><span className="italic">Let&apos;s have a productive day!</span> 😁</p>
                 </div>
 
                 {/* Command bar */}
-                <CommandBar />
+                <Suspense>
+                    <CommandBar />
+                </Suspense>
 
                 {/* List of tasks */}
-                <ListOfTaskCards />
+                <Suspense>
+                    <ListOfTaskCards />
+                </Suspense>
             </div>
         </main>
       );
