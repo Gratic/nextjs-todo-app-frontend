@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NextJS ToDo App Frontend
 
-## Getting Started
+This is a ToDo app frontend meant to be used with my todo app backend, available [here](https://github.com/Gratic/simple-todo-app).
 
-First, run the development server:
+![Illustration of the homepage](./public/homepage.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This application features:
+ * Creation of tasks with a title and an optional description;
+ * Modification of tasks:
+   * Easy modification of the title or description.
+ * Simple checkmark to mark a task as complete or uncomplete;
+ * Filtering tasks:
+   * Archive the completed tasks quickly.
+ * Order the task by creation date;
+ * Save the date at which you completed task;
+ * Easily delete tasks you made by error.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Documentation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To start the application you can use docker or build it yourself.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Pulling the image from Docker Hub
 
-## Learn More
+You can directly pull the image: `docker pull gratic/frontend-todo-app:0.3.0`.
 
-To learn more about Next.js, take a look at the following resources:
+And then create a container: `docker run gratic/frontend-todo-app:0.3.0 -e TASK_API_ENDPOINT=<task rest api url>`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The application require access to the Task REST API.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Building by yourself
 
-## Deploy on Vercel
+### Building the application
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This application was built with `Next.js 14.2.11` and `Node v20.16.0`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+First download dependencies: `npm ci`.
+Then build the optimized application using: `npm run build`.
+
+### Starting the application
+
+Make sure the Task API endpoint is running and configured properly. See configuration below for more information.
+
+After building the application, use: `npm run start`.
+
+The application will listen on port `3000` by default. Use `npm run start -- -p <Your_Port>`
+
+### Starting the dev server
+
+The dev server requires the Task API endpoint to be working properly. See configuration below for more information.
+
+Install dependencies: `npm ci`.
+
+Run the development server using: `npm run dev`.
+
+## Configuration
+
+The file `.env.example` provide a template for configuration.
+
+`TASK_API_ENDPOINT`: URL to the Task REST API endpoint. *Default to `http://localhost:8000/v1/tasks`*.

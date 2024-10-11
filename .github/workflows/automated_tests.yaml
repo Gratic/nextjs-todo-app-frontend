@@ -23,3 +23,5 @@ jobs:
         run: npm run test
       - name: Run linting
         run: npm run lint
+      - name: Run Build
+        run: npm run build
