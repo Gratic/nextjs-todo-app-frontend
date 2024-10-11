@@ -3,11 +3,12 @@
 import TaskCard from "@/lib/ui/TaskCard";
 import { useSearchParams } from "next/navigation";
 import { readCheckedStateFromParam } from "@/lib/utils";
-import { useFetchAllTasks, createTask, updateTask, deleteTask } from "@/lib/task_actions";
+import {  createTask, updateTask, deleteTask } from "@/lib/task_actions";
 import { useCallback, useMemo, useState } from "react";
 import NewTaskForm from "./NewTaskForm";
 import { Task } from "../datatypes";
 import { Conditional } from "./Conditional";
+import { useFetchAllTasks } from "../task_swr";
 
 
 export default function ListOfTaskCards() {

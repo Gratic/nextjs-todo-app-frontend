@@ -22,6 +22,11 @@ jest.mock('next/navigation', () => {
 }});
 
 jest.mock('@/lib/task_actions', () => ({
+    updateTask: jest.fn(),
+    deleteTask: jest.fn(),
+}));
+
+jest.mock('@/lib/task_swr', () => ({
     useFetchAllTasks: jest.fn().mockImplementation(() => {
         return {
             tasks: [...tasks], // /!\ Has to be a new instanciation to properly trigger rerendering (surely due to useMemo)
@@ -30,9 +35,8 @@ jest.mock('@/lib/task_actions', () => ({
             mutate: jest.fn(),
         }
     }),
-    updateTask: jest.fn(),
-    deleteTask: jest.fn(),
 }));
+
 
 function createMockSearchParams({showCompleted, showTodo, order} : {showCompleted: boolean, showTodo: boolean, order: "chronologically" | "reverse"}) {
     return jest.fn().mockReturnValue({
